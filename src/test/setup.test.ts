@@ -1,4 +1,8 @@
-import { NetworkName, isDefined } from '@railgun-community/shared-models';
+import {
+  NetworkName,
+  delay,
+  isDefined,
+} from '@railgun-community/shared-models';
 import {
   createRailgunWallet2ForTests,
   createRailgunWalletForTests,
@@ -12,6 +16,19 @@ import {
 import { ForkRPCType, setupTestRPCAndWallets } from './rpc-setup.test';
 import { testConfig } from './test-config.test';
 import { getForkTestNetworkName } from './common.test';
+import { ethers } from 'ethers';
+import {
+  abi as AccessCardNFTABI,
+  bytecode as AccessCardNFTBytecode,
+} from '../bytecode/accessCardNFT.json';
+import {
+  getTestEthersWallet,
+  getTestProvider,
+  testRPCProvider,
+  testRailgunWallet,
+} from './shared.test';
+import { AccessCardNFT } from 'typechain';
+import { MOCK_RAILGUN_WALLET_ADDRESS } from './mocks.test';
 
 before(async function run() {
   if (isDefined(process.env.RUN_FORK_TESTS)) {
@@ -57,6 +74,7 @@ const getSupportedNetworkNamesForTest = (): NetworkName[] => {
 };
 
 export const setupForkTests = async () => {
+  console.log('A');
   const networkName = getForkTestNetworkName();
 
   if (!Object.keys(NetworkName).includes(networkName)) {
@@ -89,15 +107,43 @@ export const setupForkTests = async () => {
   // Set up secondary wallets
   await createRailgunWallet2ForTests();
 
+  const ethersWallet = getTestEthersWallet();
+  // ethersWallet.connect(getTestProvider());
+
+  const AccessCardNFTFactory = new ethers.ContractFactory(
+    AccessCardNFTABI,
+    AccessCardNFTBytecode,
+    ethersWallet,
+  );
+  const accessCardNFT = (await AccessCardNFTFactory.deploy()) as AccessCardNFT;
+
+  await delay(1000);
+
+  // console.log(`await accessCardNFT.getAddress());
+  testConfig.contractsEthereum.accessCard = await accessCardNFT.getAddress();
+
+  console.log(await ethersWallet.getAddress());
+  console.log(testConfig.contractsEthereum.accessCard);
+
+  const mintTransaction = await accessCardNFT.safeMint.populateTransaction(
+    await ethersWallet.getAddress(),
+    0n,
+  );
+  await ethersWallet.sendTransaction(mintTransaction);
+
   // Shield tokens for tests
-  await shieldAllTokensForTests(networkName, tokenAddresses);
+  // await shieldAllTokensForTests(networkName, tokenAddresses);
 
   // Make sure shielded balances are updated
-  await waitForShieldedTokenBalances(networkName, tokenAddresses);
+  // await waitForShieldedTokenBalances(networkName, tokenAddresses);
 
   // TODO: Deploy NFT contract
   // ...
 
   // TODO: Add nftAddress / tokenSubID
-  // await mintAndShieldERC721(networkName, nftAddress, tokenSubID);
+  await mintAndShieldERC721(
+    networkName,
+    testConfig.contractsEthereum.accessCard,
+    '0x00',
+  );
 };

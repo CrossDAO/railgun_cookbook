@@ -18,6 +18,8 @@ export type { UniV2LikePair } from "./liquidity/UniV2LikePair";
 export { UniV2LikePair__factory } from "./factories/liquidity/UniV2LikePair__factory";
 export type { UniV2LikeRouter } from "./liquidity/UniV2LikeRouter";
 export { UniV2LikeRouter__factory } from "./factories/liquidity/UniV2LikeRouter__factory";
+export type { AccessCardNFT } from "./token/AccessCardNFT";
+export { AccessCardNFT__factory } from "./factories/token/AccessCardNFT__factory";
 export type { Erc20 } from "./token/Erc20";
 export { Erc20__factory } from "./factories/token/Erc20__factory";
 export type { Erc721 } from "./token/Erc721";

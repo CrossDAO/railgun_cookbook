@@ -13,7 +13,7 @@ import {
   TransactionGasDetails,
   isDefined,
 } from '@railgun-community/shared-models';
-import { ContractTransaction, JsonRpcProvider, Wallet } from 'ethers';
+import { ContractTransaction, JsonRpcProvider, Wallet, ethers } from 'ethers';
 import { testConfig } from './test-config.test';
 import { RecipeInput, RecipeOutput } from '../models';
 import { AbstractWallet } from '@railgun-community/engine';
@@ -121,19 +121,19 @@ export const createQuickstartCrossContractCallsForTest = async (
     }),
   );
 
-  if (unshieldERC20Amounts.length < 1) {
-    throw new Error(
-      'Test cross-contract call runner requires at least 1 unshield ERC20 amount.',
-    );
-  }
+  // if (unshieldERC20Amounts.length < 1) {
+  //   throw new Error(
+  //     'Test cross-contract call runner requires at least 1 unshield ERC20 amount.',
+  //   );
+  // }
 
   // Proof/transaction requires relayer fee in order to parse the relay adapt error for testing.
   // Ie. RelayAdapt transaction must continue after revert, and emit event with error details.
-  const mockRelayerFeeRecipient: RailgunERC20AmountRecipient = {
-    tokenAddress: unshieldERC20Amounts[0].tokenAddress,
-    amount: 0n,
-    recipientAddress: MOCK_RAILGUN_ADDRESS,
-  };
+  // const mockRelayerFeeRecipient: RailgunERC20AmountRecipient = {
+  //   tokenAddress: unshieldERC20Amounts[0].tokenAddress,
+  //   amount: 0n,
+  //   recipientAddress: MOCK_RAILGUN_ADDRESS,
+  // };
 
   let gasEstimate: Optional<bigint>;
   try {
@@ -171,15 +171,15 @@ export const createQuickstartCrossContractCallsForTest = async (
     shieldERC20Recipients,
     shieldNFTRecipients,
     crossContractCalls,
-    mockRelayerFeeRecipient,
-    false, // sendWithPublicWallet
+    undefined, // mockRelayerFeeRecipient,
+    true, // sendWithPublicWallet
     undefined, // overallBatchMinGasPrice
     minGasLimit,
     () => {}, // progressCallback
   );
 
   const transactionGasDetails: TransactionGasDetails = {
-    ...MOCK_TRANSACTION_GAS_DETAILS_SERIALIZED_TYPE_1,
+    ...MOCK_TRANSACTION_GAS_DETAILS_SERIALIZED_TYPE_2,
     gasEstimate: gasEstimate ?? minGasLimit,
   };
   const { transaction } = await populateProvedCrossContractCalls(
@@ -190,8 +190,8 @@ export const createQuickstartCrossContractCallsForTest = async (
     shieldERC20Recipients,
     shieldNFTRecipients,
     crossContractCalls,
-    mockRelayerFeeRecipient,
-    false, // sendWithPublicWallet
+    undefined, // mockRelayerFeeRecipient,
+    true, // sendWithPublicWallet
     undefined, // overallBatchMinGasPrice
     transactionGasDetails,
   );

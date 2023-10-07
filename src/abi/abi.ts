@@ -1,4 +1,5 @@
 import ABI_ERC20 from './token/erc20.json';
+import ABI_ACCESS_CARD_NFT from './token/accessCardNFT.json';
 import ABI_ERC721 from './token/erc721.json';
 import ABI_RELAY_ADAPT from './adapt/RelayAdapt.json';
 import ABI_UNI_V2_LIKE_FACTORY from './liquidity/UniV2LikeFactory.json';
@@ -21,5 +22,8 @@ export const abi = {
   },
   vault: {
     beefy: ABI_BEEFY_VAULT_MERGED_V6V7,
+  },
+  governor: {
+    accessCard: ABI_ACCESS_CARD_NFT,
   },
 } as const;

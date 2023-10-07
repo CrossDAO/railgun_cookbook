@@ -54,7 +54,7 @@ export const getRPCPort = (networkName: NetworkName) => {
 };
 
 export const getLocalhostRPC = (port: number) => {
-  return `http://localhost:${port}`;
+  return `http://127.0.0.1:${port}`;
 };
 
 export const executeRecipeStepsAndAssertUnshieldBalances = async (

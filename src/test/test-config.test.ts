@@ -29,6 +29,9 @@ export let testConfig = {
     // Vault tokens
     crvUSDCWBTCWETH: '0x7F86Bf177Dd4F3494b841a37e810A34dD56c829B',
     mooConvexTriCryptoUSDC: '0xD1BeaD7CadcCC6b6a715A6272c39F1EC54F6EC99',
+
+    // runtime-generated-addresses
+    accessCard: '',
   },
 
   contractsArbitrum: {
