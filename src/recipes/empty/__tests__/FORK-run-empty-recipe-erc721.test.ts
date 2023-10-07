@@ -1,10 +1,11 @@
-import chai from 'chai';
+import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { RecipeInput } from '../../../models/export-models';
 import {
   NETWORK_CONFIG,
   NFTTokenType,
   NetworkName,
+  TXIDVersion,
 } from '@railgun-community/shared-models';
 import { setRailgunFees } from '../../../init';
 import {
@@ -18,13 +19,18 @@ import {
   shouldSkipForkTest,
 } from '../../../test/common.test';
 import { testConfig } from '../../../test/test-config.test';
+import {
+  TokenType,
+  balanceForNFT,
+  getTokenDataNFT,
+} from '@railgun-community/wallet';
 import { testRailgunWallet } from '../../../test/shared.test';
 
 chai.use(chaiAsPromised);
 
 const networkName = NetworkName.Ethereum;
-// const nftAddress = '0x1234567890';
-const tokenSubID = '0x0';
+const txidVersion = TXIDVersion.V2_PoseidonMerkle;
+const tokenSubID = '0x0000';
 
 describe.only('FORK-run-empty-recipe-erc721', function run() {
   this.timeout(45000);
@@ -68,20 +74,16 @@ describe.only('FORK-run-empty-recipe-erc721', function run() {
       recipeOutput,
     );
 
-    const chain = NETWORK_CONFIG[networkName].chain;
-    const balances = await testRailgunWallet.balances(chain);
-
-    // RUN AGAIN TO MAKE SURE THE NFT WAS SHIELDED PROPERLY:
-    await executeRecipeStepsAndAssertUnshieldBalances(
-      recipe.config.name,
-      recipeInput,
-      recipeOutput,
-    );
-
     // REQUIRED TESTS:
 
-    // 1. Add New Private Balance expectations.
-    // N/A
+    const nftTokenData = getTokenDataNFT(
+      testConfig.contractsEthereum.accessCard,
+      TokenType.ERC721,
+      tokenSubID,
+    );
+    expect(
+      balanceForNFT(txidVersion, testRailgunWallet, networkName, nftTokenData),
+    ).to.equal(1n);
 
     // 2. Add External Balance expectations.
     // N/A
