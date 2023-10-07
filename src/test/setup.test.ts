@@ -9,6 +9,7 @@ import {
   createRailgunWalletForTests,
   loadLocalhostFallbackProviderForTests,
   mintAndShieldERC721,
+  pollUntilUTXOMerkletreeScanned,
   removeTestDB,
   shieldAllTokensForTests,
   startRailgunForTests,
@@ -70,8 +71,8 @@ const getSupportedNetworkNamesForTest = (): NetworkName[] => {
 };
 
 export const setupForkTests = async () => {
-  const txidVersion = TXIDVersion.V2_PoseidonMerkle;
   const networkName = getForkTestNetworkName();
+  const txidVersion = TXIDVersion.V2_PoseidonMerkle;
 
   if (!Object.keys(NetworkName).includes(networkName)) {
     throw new Error(
@@ -96,6 +97,8 @@ export const setupForkTests = async () => {
   startRailgunForTests();
 
   await loadLocalhostFallbackProviderForTests(networkName);
+
+  await pollUntilUTXOMerkletreeScanned();
 
   // Set up primary wallet
   await createRailgunWalletForTests();
