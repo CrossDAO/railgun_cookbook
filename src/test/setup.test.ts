@@ -1,16 +1,14 @@
 import {
   NetworkName,
-<<<<<<< HEAD
   delay,
-=======
   TXIDVersion,
->>>>>>> f3c20ed07f26c36ee78205c8b452562e906afd19
   isDefined,
 } from '@railgun-community/shared-models';
 import {
   createRailgunWallet2ForTests,
   createRailgunWalletForTests,
   loadLocalhostFallbackProviderForTests,
+  mintAndShieldERC721,
   removeTestDB,
   shieldAllTokensForTests,
   startRailgunForTests,
@@ -24,14 +22,8 @@ import {
   abi as AccessCardNFTABI,
   bytecode as AccessCardNFTBytecode,
 } from '../bytecode/accessCardNFT.json';
-import {
-  getTestEthersWallet,
-  getTestProvider,
-  testRPCProvider,
-  testRailgunWallet,
-} from './shared.test';
+import { getTestEthersWallet } from './shared.test';
 import { AccessCardNFT } from 'typechain';
-import { MOCK_RAILGUN_WALLET_ADDRESS } from './mocks.test';
 
 before(async function run() {
   if (isDefined(process.env.RUN_FORK_TESTS)) {
@@ -77,11 +69,7 @@ const getSupportedNetworkNamesForTest = (): NetworkName[] => {
 };
 
 export const setupForkTests = async () => {
-<<<<<<< HEAD
-  console.log('A');
-=======
   const txidVersion = TXIDVersion.V2_PoseidonMerkle;
->>>>>>> f3c20ed07f26c36ee78205c8b452562e906afd19
   const networkName = getForkTestNetworkName();
 
   if (!Object.keys(NetworkName).includes(networkName)) {
@@ -142,11 +130,7 @@ export const setupForkTests = async () => {
   // await shieldAllTokensForTests(networkName, tokenAddresses);
 
   // Make sure shielded balances are updated
-<<<<<<< HEAD
-  // await waitForShieldedTokenBalances(networkName, tokenAddresses);
-=======
   await waitForShieldedTokenBalances(txidVersion, networkName, tokenAddresses);
->>>>>>> f3c20ed07f26c36ee78205c8b452562e906afd19
 
   // TODO: Deploy NFT contract
   // ...
