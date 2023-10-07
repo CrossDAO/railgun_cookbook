@@ -12,6 +12,7 @@ import {
   removeTestDB,
   shieldAllTokensForTests,
   startRailgunForTests,
+  waitForShieldedNFTBalance,
   waitForShieldedTokenBalances,
 } from './railgun-setup.test';
 import { ForkRPCType, setupTestRPCAndWallets } from './rpc-setup.test';
@@ -130,13 +131,20 @@ export const setupForkTests = async () => {
   // await shieldAllTokensForTests(networkName, tokenAddresses);
 
   // Make sure shielded balances are updated
-  await waitForShieldedTokenBalances(txidVersion, networkName, tokenAddresses);
+  // await waitForShieldedTokenBalances(txidVersion, networkName, tokenAddresses);
 
   // TODO: Deploy NFT contract
   // ...
 
   // TODO: Add nftAddress / tokenSubID
   await mintAndShieldERC721(
+    networkName,
+    testConfig.contractsEthereum.accessCard,
+    '0x00',
+  );
+
+  await waitForShieldedNFTBalance(
+    txidVersion,
     networkName,
     testConfig.contractsEthereum.accessCard,
     '0x00',
